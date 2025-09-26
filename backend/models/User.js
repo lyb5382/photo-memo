@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     displayName: { type: String, trim: true, default: '' },
     role: { type: String, enum: ['user', 'admin'], default: 'user', index: true },
     isActive: { type: Boolean, default: true },
-    isLogined: { type: Boolean, default: false }
+    isLogined: { type: Boolean, default: false },
+    loginAttemp: { type: Number, default: 0 }
 }, { timeseries: true })
 
 userSchema.methods.comparePasswd = function (p) {
