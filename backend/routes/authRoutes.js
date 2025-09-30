@@ -3,6 +3,7 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
+const auth = require('../middlewares/auth')
 
 function makeToken(u) {
     return jwt.sign(
@@ -37,7 +38,7 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ email: email.toLowerCase(), isActive: true })
         const passwd = await user.comparePasswd(password)
         if (!user) {
-            return res.status(400).json({ message: 'email or 비밀번호 틀림' })
+            return res.status(400).json({ message: '존재하지 않는 email' })
         }
         if (!passwd) {
             user.loginAttemp += 1
@@ -62,23 +63,55 @@ router.post('/login', async (req, res) => {
             secure: 'production',
             maxAge: 7 * 25 * 60 * 60 * 1000
         })
-        return res.status(200).json({ user: updated.safeJSON(), token })
+        return res.status(200).json({ user: updated.safeJSON(), token, loginAttemp: 0 })
     } catch (error) {
         return res.status(500).json({ message: 'failed', error: error.message })
     }
 })
 
+router.use(auth)
+// 토큰 조회
 router.get('/me', async (req, res) => {
     try {
-        const h = req.headers.authorization || ''
+        const me = await Usesr.findById(req.body._id)
+        if (!me) return res.status(404).json({ message: '사용자 없음' })
         const token = h.startsWith('Bearer') ? h.slice(7) : null
         if (!token) return res.status(401).json({ message: '인증 필요' })
-        const payload = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findById(payload.id)
-        if (!user) return res.status(404).json({ message: '유저 찾을 수 없음' })
-        res.status(200).json(user.safeJSON())
+        return res.status(200).json(me.safeJSON())
     } catch (error) {
         return res.status(401).json({ message: '토큰 무효', error: error.message })
+    }
+})
+// 관리자 조회
+router.get('/users', async (req, res) => {
+    try {
+        const me = await User.findById(req.user.id)
+        if (!me) return res.status(404).json({ message: '사용자 없음' })
+        if (me.role !== 'admin') {
+            return res.status(403).json({ message: '권한 없음' })
+        }
+        const users = await User.find().select('-passwordHash')
+        return res.status(200).json({ users })
+    } catch (error) {
+        res.status(401).json({ message: "조회 실패", error: error.message })
+    }
+})
+// 로그아웃
+router.post('/logout', async (req, res) => {
+    try {
+        await User.findByIdAndUpdate(
+            req.user.id,
+            { $set: { isLoggined: false } },
+            { new: true }
+        )
+        res.clearCookie('token', {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: 'production'
+        })
+        return res.status(200).json({ message: '로그아웃 성공' })
+    } catch (error) {
+        return res.status(500).json({ message: '로그아웃 실패', error: error.message })
     }
 })
 
