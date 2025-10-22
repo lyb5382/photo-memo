@@ -2,9 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const dotenv = require('dotenv')
-const authRoutes = require('./routes/authRoutes.js')
-
 dotenv.config()
+const authRoutes = require('./routes/authRoutes.js')
+const uploadRoutes = require('./routes/upload.js')
 
 const app = express()
 
@@ -22,6 +22,11 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/upload', uploadRoutes)
+
+app.use((req, res) => {
+    res.status(400).json({ message: '해당 경로를 찾을 수 없음' })
+})
 
 app.use((req, res) => {
     res.status(500).json({ message: '서버 오류' })

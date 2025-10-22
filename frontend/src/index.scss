@@ -22,7 +22,7 @@ body,
 }
 
 body {
-    background: var(--bg);
+    background: var(--surface);
     color: var(--text);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -61,25 +61,36 @@ ul {
     list-style-type: none;
 }
 
-
-
 :root {
-    --bg: #ffffff;
-    --text: #111111;
-    --muted: #555555;
+    /* ===== Base Tone ===== */
+    --bg: #f9f9f9;
+    --surface: #f9fafb;
+    --surface-alt: #f3f4f6;
+    --text: #111827;
+    --dark-bl: #0f0f0f;
+    --muted: #6b7280;
     --border: #e5e7eb;
-    --surface: #fafafa;
-
+    /* ===== Brand Colors ===== */
     --primary: #239beb;
+    --primary-hover: #1f8ad4;
     --primary-contrast: #ffffff;
-
+    --secondary: #10b981; // emerald tone
+    --secondary-hover: #059669;
+    --accent: #f97316; // orange-500
+    /* ===== Status Colors ===== */
+    --success: #22c55e;
+    --warning: #facc15;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    /* ===== Gradient / Depth ===== */
+    --gradient: linear-gradient(90deg, #239beb 0%, #10b981 100%);
+    --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* ===== Radius & Focus ===== */
     --radius-l: 1rem;
-    /* 10px */
     --radius-s: 0.5rem;
-    /* 5px */
     --focus: #5b9fff;
 }
-
 
 /* 포커스 */
 :focus-visible {
@@ -87,8 +98,6 @@ ul {
     outline-offset: 0.2rem;
     border-radius: 0.6rem;
 }
-
-
 
 /* =========================
    Typography

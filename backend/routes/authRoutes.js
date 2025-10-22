@@ -73,13 +73,13 @@ router.use(auth)
 // 토큰 조회
 router.get('/me', async (req, res) => {
     try {
-        const me = await Usesr.findById(req.body._id)
-        if (!me) return res.status(404).json({ message: '사용자 없음' })
-        const token = h.startsWith('Bearer') ? h.slice(7) : null
-        if (!token) return res.status(401).json({ message: '인증 필요' })
+        const me = await User.findById(req.user.id)
+        if (!me) {
+            return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' })
+        }
         return res.status(200).json(me.safeJSON())
     } catch (error) {
-        return res.status(401).json({ message: '토큰 무효', error: error.message })
+        return res.status(500).json({ message: '사용자 정보 조회 실패', error: error.message })
     }
 })
 // 관리자 조회
