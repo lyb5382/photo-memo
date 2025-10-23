@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 const authRoutes = require('./routes/authRoutes.js')
 const uploadRoutes = require('./routes/upload.js')
+const postRoutes = require('./routes/posts.js')
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes)
 app.use('/api/upload', uploadRoutes)
+app.use('/api/posts', postRoutes)
 
 app.use((req, res) => {
     res.status(400).json({ message: '해당 경로를 찾을 수 없음' })

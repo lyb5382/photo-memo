@@ -14,6 +14,7 @@ function App() {
     const raw = localStorage.getItem('user')
     return raw ? JSON.parse(raw) : null
   })
+  const location = useLocation()
   const [token, setToken] = useState(() => localStorage.getItem('token'))
   const [me, setMe] = useState(null)
   const isAuthed = !!token
