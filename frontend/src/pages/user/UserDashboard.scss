@@ -1,0 +1,14 @@
+.inner {
+    .search-warp {
+        display: flex;
+        gap: 1rem;
+
+        input {
+            flex: 4;
+        }
+
+        .btn {
+            flex: 1;
+        }
+    }
+}

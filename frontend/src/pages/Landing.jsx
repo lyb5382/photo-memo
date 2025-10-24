@@ -9,7 +9,7 @@ const Landing = () => {
                 <div className="landing-hero">
                     <h1>포토메모</h1>
                     <p className="landing-sub">사진 한 장, 한 줄 메모. 태그 · 검색 · 공유까지.</p>
-                    <Link to="/admin/login" className="btn btn-primary">시작하기</Link>
+                    <Link to="/admin/login" className="btn primary">시작하기</Link>
                 </div>
                 <ul className="landing-features">
                     <li>

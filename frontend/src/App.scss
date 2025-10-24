@@ -1,18 +1,9 @@
-.page {
-    padding-top: .5rem;
-    text-align: center;
-
-    .inner {
-        max-width: 80rem;
-        margin: 2rem auto;
-        position: relative;
-        border-radius: var(--radius-l);
-        background-color: var(--bg);
-        box-shadow: var(--shadow-soft);
-        padding: 1rem;
-    }
-
-    @media screen and (max-width:800px) {
-        margin: 0 2rem;
-    }
-}
+@use './styles/font';
+@use './styles/token';
+@use './styles/base';
+@use './styles/typography';
+@use './styles/layout';
+@use './styles/form';
+@use './styles/button';
+@use './styles/modal';
+@use './styles/util';

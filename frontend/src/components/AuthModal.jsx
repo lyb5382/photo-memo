@@ -85,7 +85,7 @@ const AuthModal = ({ open, onClose, onAuthed }) => {
         <div className='am-backdrop' onClick={handleBackdropClick}>
             <div className="am-panel" onClick={(e) => e.stopPropagation()}>
                 <div className="am-tabs">
-                    <button type='button' className={mode === 'login' ? 'on' : ''} onClick={() => setMode('login')}>
+                    <button type='button' className={`btn ${mode === 'login' ? 'on' : ''}`} onClick={() => setMode('login')}>
                         로그인
                     </button>
                     <button type='button' onClick={() => setMode('register')} className={mode === 'register' ? 'on' : ''} >

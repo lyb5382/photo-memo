@@ -18,8 +18,9 @@
         >li {
             flex: 1;
             padding: 2rem;
+            background-color: var(--bg);
             border-radius: var(--radius-s);
-            border: .1rem solid var(--border);
+            box-shadow: var(--shadow-soft);
         }
     }
 

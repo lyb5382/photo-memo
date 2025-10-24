@@ -4,7 +4,7 @@ import './AuthPanel.scss'
 import { useNavigate } from 'react-router-dom'
 
 const AuthPanel = ({ isAuthed, user, me, onFetchMe, onLogout, onAuthed, requiredRole }) => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(true)
     const hasRequiredRole = !requiredRole || (user && user.role == requiredRole)
     const navigate = useNavigate()
     const isAdminPage = requiredRole === 'admin'
@@ -23,14 +23,9 @@ const AuthPanel = ({ isAuthed, user, me, onFetchMe, onLogout, onAuthed, required
         }
     }, [isAuthed, user, isAdminPage, navigate])
 
-    if (open) {
+    if (!open) {
         return (
-            <AuthModal open={open} onClose={() => setOpen(false)} onAuthed={onAuthed} />
-        )
-    }
-
-    return (
-        <section className='admin-wrap'>
+            <section className='admin-wrap'>
             <div className="inner">
                 <header className='admin-head'>
                     <h1 className='title'>관리자 인증</h1>
@@ -79,6 +74,11 @@ const AuthPanel = ({ isAuthed, user, me, onFetchMe, onLogout, onAuthed, required
                 <AuthModal />
             </div>
         </section>
+        )
+    }
+
+    return (
+        <AuthModal open={open} onClose={() => setOpen(false)} onAuthed={onAuthed} />
     )
 }
 
