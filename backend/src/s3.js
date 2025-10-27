@@ -16,8 +16,10 @@ const s3 = new S3Client({
 
 const Bucket = process.env.S3_BUCKET
 
+
 async function presignPut(Key, ContentType, sec = 300) {
-    if (!Bucket) throw new Error('S3 bucket is undefined')
+    if (!Bucket) throw new Error('s3 bucket is undefined')
+    if (!Key) throw new Error("Key is required");        // 추가됨: Key 유효성 검사 추가
     const cmd = new PutObjectCommand({ Bucket, Key, ContentType })
     return getSignedUrl(s3, cmd, { expiresIn: sec })
 }

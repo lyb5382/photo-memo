@@ -3,13 +3,13 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
-const auth = require('../middlewares/auth')
+const { authenticateToken } = require('../middlewares/auth')
 
 function makeToken(u) {
     return jwt.sign(
         { id: u._id.toString(), role: u.role, email: u.email },
         process.env.JWT_SECRET,
-        { expiresIn: '7d' }
+        { expiresIn: '7d', jwtid: `${u._id}-${Date.now()}` }
     )
 }
 // 가입
@@ -36,10 +36,10 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body
         if (!email || !password) return res.status(400).json({ message: 'email, 비밀번호 필수 입력' })
         const user = await User.findOne({ email: email.toLowerCase(), isActive: true })
-        const passwd = await user.comparePasswd(password)
         if (!user) {
             return res.status(400).json({ message: '존재하지 않는 email' })
         }
+        const passwd = await user.comparePasswd(password)
         if (!passwd) {
             user.loginAttemp += 1
             if (user.loginAttemp >= 5) {
@@ -59,9 +59,10 @@ router.post('/login', async (req, res) => {
         const token = makeToken(updated)
         res.cookie('token', token, {
             httpOnly: true,
-            sameSite: 'lax',
-            secure: 'production',
-            maxAge: 7 * 25 * 60 * 60 * 1000
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            maxAge: 7 * 24 * 60 * 60 * 1000
         })
         return res.status(200).json({ user: updated.safeJSON(), token, loginAttemp: 0 })
     } catch (error) {
@@ -69,7 +70,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.use(auth)
+router.use(authenticateToken)
 // 토큰 조회
 router.get('/me', async (req, res) => {
     try {
@@ -101,13 +102,14 @@ router.post('/logout', async (req, res) => {
     try {
         await User.findByIdAndUpdate(
             req.user.id,
-            { $set: { isLoggined: false } },
+            { $set: { isLogined: false } },
             { new: true }
         )
-        res.clearCookie('token', {
+        res.cookie('token', {
             httpOnly: true,
             sameSite: 'lax',
-            secure: 'production'
+            secure: process.env.NODE_ENV === "production",
+            path: "/"
         })
         return res.status(200).json({ message: '로그아웃 성공' })
     } catch (error) {
